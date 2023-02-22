@@ -5,17 +5,28 @@ using Cinemachine;
 
 public class CharacterSwitching : MonoBehaviour
 {
-    [SerializeField] GameObject JerryArmature;
-    [SerializeField] GameObject TomArmature;
+
+    #region Singleton
+    public static CharacterSwitching instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+    #endregion
+
+    [SerializeField] public GameObject JerryArmature;
+    [SerializeField] public GameObject TomArmature;
     [SerializeField] CinemachineVirtualCamera PlayerFollowCamera;
 
-    private enum Characters
+    public enum Characters
     {
         Tom,
         Jerry
     }
 
-    [SerializeField] Characters currentCharacter;
+    public Characters currentCharacter;
+    private bool canSwitch = true;
 
     private void Start()
     {
@@ -24,13 +35,15 @@ public class CharacterSwitching : MonoBehaviour
 
     private void Update()
     {
+        if (!canSwitch) return;
+
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             SwitchCharacter();
         }
     }
 
-    private void SwitchCharacter()
+    public void SwitchCharacter()
     {
         if(currentCharacter == Characters.Tom)
         {
@@ -55,7 +68,7 @@ public class CharacterSwitching : MonoBehaviour
         CinemachineComponentBase componentBase = PlayerFollowCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
         if (componentBase is Cinemachine3rdPersonFollow)
         {
-            (componentBase as Cinemachine3rdPersonFollow).CameraDistance = 2.46f;
+            (componentBase as Cinemachine3rdPersonFollow).CameraDistance = 4.12f;
         }
     }
 
@@ -71,7 +84,13 @@ public class CharacterSwitching : MonoBehaviour
         CinemachineComponentBase componentBase = PlayerFollowCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
         if (componentBase is Cinemachine3rdPersonFollow)
         {
-            (componentBase as Cinemachine3rdPersonFollow).CameraDistance = 1.53f;
+            (componentBase as Cinemachine3rdPersonFollow).CameraDistance = 2.24f;
         }
+    }
+
+    
+    public void SetCanSwitch(bool value)
+    {
+        canSwitch = value;
     }
 }

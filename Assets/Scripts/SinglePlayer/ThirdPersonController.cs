@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Unity.Netcode;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -7,11 +6,11 @@ using Unity.Netcode;
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-    public class ThirdPersonController : NetworkBehaviour
+    public class ThirdPersonController : MonoBehaviour
     {
-        [Header("Multiplayer")]
+        [Header("Ray Casting")]
 
-        public bool onMultiplayer = false;
+        public GameObject raycastPoint;
 
 
         [Header("Player")]
@@ -57,7 +56,7 @@ namespace StarterAssets
         public float GroundedOffset = -0.14f;
 
         [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-        public float GroundedRadius = 0.28f;
+        public float GroundedLength = 0.28f;
 
         [Tooltip("What layers the character uses as ground")]
         public LayerMask GroundLayers;
@@ -137,9 +136,6 @@ namespace StarterAssets
 
         private void Update()
         {
-            if(onMultiplayer)
-                if (!IsOwner) return;
-
             _hasAnimator = TryGetComponent(out _animator);
 
             JumpAndGravity();
@@ -149,8 +145,6 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            if (onMultiplayer)
-                if (!IsOwner) return;
             CameraRotation();
         }
 
@@ -169,7 +163,7 @@ namespace StarterAssets
             // set sphere position, with offset
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
                 transform.position.z);
-            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+            Grounded = Physics.Raycast(spherePosition, Vector3.down,GroundedLength, GroundLayers,
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
@@ -361,7 +355,7 @@ namespace StarterAssets
             // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
             Gizmos.DrawSphere(
                 new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
+                GroundedLength);
         }
 
         private void OnFootstep(AnimationEvent animationEvent)
@@ -384,6 +378,13 @@ namespace StarterAssets
             }
         }
         
+        
+        public RaycastHit CastRay(LayerMask layers)
+        {
+            RaycastHit hit;
+            Physics.Raycast(raycastPoint.transform.position, transform.forward, out hit, layers);
 
+            return hit;
+        }
     }
 }

@@ -9,14 +9,14 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
-  - Pushable Objects
+  - Light Pushable Objects
+  - Hard Pushable Objects
   - 
-  - 
-  - 
+  - InteractableObjects
   - 
   - 
   - 

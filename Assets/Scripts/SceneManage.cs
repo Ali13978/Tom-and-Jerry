@@ -17,18 +17,28 @@ public class SceneManage : MonoBehaviour
 
     #endregion
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void QuitGame()
     {
         Application.Quit();
     }
-
-    public void LoadGameScene()
+    
+    public void LoadSinglePlayerScene()
     {
+        Loadingcanvas.instance.UpdateLoadingText("Loading game level");
+        Loadingcanvas.instance.StartCanvasTimer(3f);
         SceneManager.LoadScene(1);
     }
 
-    public void LoadSinglePlayerScene()
+    public void LoadPrototyping()
     {
+        Loadingcanvas.instance.UpdateLoadingText("Loading prototyping scene");
+        Loadingcanvas.instance.StartCanvasTimer(2f);
         SceneManager.LoadScene(2);
     }
 }

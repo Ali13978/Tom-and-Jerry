@@ -21,9 +21,6 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (GetComponent<ThirdPersonController>().onMultiplayer)
-                if (!GetComponent<ThirdPersonController>().IsOwner) return;
-
             if (canInput)
             {
                 Vector2 moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
